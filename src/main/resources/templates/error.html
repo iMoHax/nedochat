@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+
+<div layout:fragment="content" th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}">
+    <h1 th:text="|${httpStatus} - ${httpStatus.reasonPhrase}|"></h1>
+    <p th:utext="${errorMessage}"></p>
+    <a th:href="@{/index}">Back to Home Page</a>
+</div>
+
+</body>
+</html>

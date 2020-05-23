@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Регистрация нового пользователя</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <form method="POST" th:action="@{/registration}" th:object="${registrationForm}" id="registerForm">
+                <div>
+                    <label for="username">Имя пользователя: </label>
+                    <input type="text" th:field="*{username}" th:errorclass="fieldError" />
+                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{datePlanted}"></p>
+                </div>
+                <div>
+                    <label for="name">Псевдоним: </label>
+                    <input type="text" th:field="*{name}" th:errorclass="fieldError" />
+                    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+                <div>
+                    <label for="password">Пароль: </label>
+                    <input type="password" th:field="*{password}" th:errorclass="fieldError" />
+                    <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+                <div>
+                    <label for="confirm">Подтверждите пароль: </label>
+                    <input type="password" th:field="*{confirm}" th:errorclass="fieldError" />
+                    <p th:if="${#fields.hasErrors('confirm')}" th:errors="*{confirm}"></p>
+                </div>
+                <input type="submit" value="Зарегистрировать"/>
+
+                <ul th:if="${#fields.hasErrors('global')}">
+                    <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
+                </ul>
+
+            </form>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

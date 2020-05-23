@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Регистрация нового пользователя</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <section>
+        <div class="container">
+            <div th:if="${loginError}">
+                В доступе отказано. Проверьте имя пользователя и пароль
+            </div>
+            <p><a th:href="@{/register}">Регистрация</a></p>
+            <!-- tag::thAction[] -->
+            <form method="POST" th:action="@{/login}" id="loginForm">
+                <!-- end::thAction[] -->
+                <label for="username">Имя пользователя: </label>
+                <input type="text" name="username" id="username" /><br/>
+
+                <label for="password">Пароль: </label>
+                <input type="password" name="password" id="password" /><br/>
+                <input type="submit" value="Войти"/>
+
+            </form>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>
