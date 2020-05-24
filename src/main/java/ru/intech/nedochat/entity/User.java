@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "chat")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,8 +18,10 @@ public class User implements UserDetails {
     private String username;
     private String name;
     private String password;
+    private boolean disabled;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "user_roles", schema = "chat")
     private Set<Role> roles;
 
     public User() {
@@ -74,6 +76,14 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -97,6 +107,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !disabled;
     }
 }

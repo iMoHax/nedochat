@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", schema = "chat")
 public class Role implements GrantedAuthority {
     public final static String USER = "ROLE_USER";
     public final static String ADMIN = "ROLE_ADMIN";
