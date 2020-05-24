@@ -9,11 +9,39 @@
 
 <div layout:fragment="content">
     <section>
-        <div class="container">
+        <div>
+            <p>Список пользователей:</p>
+            <ul id="usersArea">
+                <li th:each="u : ${users}" th:attr="id=${usr.id}">
+                    <strong class="nickname" th:text="${usr.name}"></strong>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <p>Сообщения:</p>
+            <ul id="chatArea">
+                <li th:each="msg : ${chatMessages}" th:attr="id=${msg.id}" class="chat-message">
+                    <strong class="nickname" th:text="${msg.sender.name}"></strong>
+                    <span class="send-date" th:text="${#temporals.format(msg.sendDate,'HH:mm:ss dd.MM.yyyy')}"></span>
+                    <th:block th:text="${msg.content}"/>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <form method="POST" th:action="@{/chat/postMessage}" id="chatForm">
+                <div>
+                    <label for="msg">Сообщение: </label>
+                    <textarea name="msg" id="msg" rows="6"></textarea>
+                </div>
+                <input type="submit" value="Отправить"/>
+            </form>
 
         </div>
     </section>
 </div>
+
+<script layout:fragment="optional" th:src="@{/js/chat.js}"></script>
+
 
 </body>
 </html>
