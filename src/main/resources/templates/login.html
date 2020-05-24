@@ -13,7 +13,7 @@
             <div th:if="${loginError}">
                 В доступе отказано. Проверьте имя пользователя и пароль
             </div>
-            <p><a th:href="@{/register}">Регистрация</a></p>
+            <p><a th:href="@{/registration}">Регистрация</a></p>
             <!-- tag::thAction[] -->
             <form method="POST" th:action="@{/login}" id="loginForm">
                 <!-- end::thAction[] -->
