@@ -12,8 +12,7 @@
         <div>
             <p>Список пользователей:</p>
             <ul id="usersArea">
-                <li th:each="u : ${users}" th:attr="id=${usr.id}">
-                    <strong class="nickname" th:text="${usr.name}"></strong>
+                <li th:each="usr : ${@usersService.onlineUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}" th:text="${usr.name}" onclick="setReceiver(this)">
                 </li>
             </ul>
         </div>
@@ -23,12 +22,14 @@
                 <li th:each="msg : ${chatMessages}" th:attr="id=${msg.id}" class="chat-message">
                     <strong class="nickname" th:text="${msg.sender.name}"></strong>
                     <span class="send-date" th:text="${#temporals.format(msg.sendDate,'HH:mm:ss dd.MM.yyyy')}"></span>
-                    <th:block th:text="${msg.content}"/>
+                    <span class="receiver" th:if="${msg.receiver}" th:text="${msg.receiver.name}"></span>
+                    <span th:text="${msg.content}"></span>
                 </li>
             </ul>
         </div>
         <div>
             <form method="POST" th:action="@{/chat/postMessage}" id="chatForm">
+                <p id="receiver" onclick="clearReceiver()"></p>
                 <div>
                     <label for="msg">Сообщение: </label>
                     <textarea name="msg" id="msg" rows="6"></textarea>

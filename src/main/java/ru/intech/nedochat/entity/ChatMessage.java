@@ -17,9 +17,12 @@ public class ChatMessage implements Comparable<ChatMessage> {
     @Size(max=2000, message = "Сообщение должно содержать не более {max} символов")
     private String content;
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User sender;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
     @Enumerated(EnumType.STRING)
     private @NotNull ChatMessageType type;
     @Column(name = "send_date", columnDefinition = "TIMESTAMP")
@@ -47,6 +50,14 @@ public class ChatMessage implements Comparable<ChatMessage> {
 
     public void setSender(User sender) {
         this.sender = sender;
+    }
+
+    public User getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
     }
 
     public ChatMessageType getType() {

@@ -11,6 +11,8 @@ public class ChatMessageModel {
     private String content;
     private Long senderId;
     private String sender;
+    private Long receiverId;
+    private String receiver;
     private LocalDateTime sendDate;
 
     public ChatMessageModel() {
@@ -23,6 +25,11 @@ public class ChatMessageModel {
         this.senderId = chatMessage.getSender().getId();
         this.sender = chatMessage.getSender().getName();
         this.sendDate = chatMessage.getSendDate();
+
+        if (chatMessage.getReceiver() != null){
+            this.receiverId = chatMessage.getReceiver().getId();
+            this.receiver = chatMessage.getReceiver().getName();
+        }
     }
 
     public Long getId() {
@@ -63,6 +70,22 @@ public class ChatMessageModel {
 
     public void setSender(String sender) {
         this.sender = sender;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
     public LocalDateTime getSendDate() {

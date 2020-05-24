@@ -40,6 +40,8 @@ public class WebSocketEventListener {
             ChatMessageModel chatMessage = new ChatMessageModel();
             chatMessage.setType(ChatMessageType.JOIN);
             chatMessage.setSendDate(LocalDateTime.now());
+            chatMessage.setSender(user.getName());
+            chatMessage.setSenderId(user.getId());
 
             messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
         }
@@ -49,7 +51,7 @@ public class WebSocketEventListener {
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 
-        User user = (User) ((UsernamePasswordAuthenticationToken)headerAccessor.getUser()).getPrincipal();
+        User user = (User) ((UsernamePasswordAuthenticationToken) headerAccessor.getUser()).getPrincipal();
 
         if (user != null) {
             logger.info("User {} disconnected", user.getUsername());
@@ -57,6 +59,8 @@ public class WebSocketEventListener {
             ChatMessageModel chatMessage = new ChatMessageModel();
             chatMessage.setType(ChatMessageType.LEAVE);
             chatMessage.setSendDate(LocalDateTime.now());
+            chatMessage.setSender(user.getName());
+            chatMessage.setSenderId(user.getId());
 
             messagingTemplate.convertAndSend("/topic/publicChatRoom", chatMessage);
         }

@@ -75,7 +75,6 @@ public class User implements UserDetails {
 
     public void addRole(Role role){
         this.roles.add(role);
-        role.getUsers().add(this);
     }
 
     public boolean isDisabled() {

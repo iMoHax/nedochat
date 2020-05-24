@@ -12,6 +12,7 @@ import ru.intech.nedochat.entity.ChatMessage;
 import ru.intech.nedochat.entity.ChatMessageType;
 import ru.intech.nedochat.entity.User;
 import ru.intech.nedochat.model.ChatMessageModel;
+import ru.intech.nedochat.repository.UserRepository;
 import ru.intech.nedochat.service.ChatMessagesService;
 
 import java.security.Principal;
@@ -19,15 +20,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ChatController {
 
     private ChatMessagesService chatMessagesService;
+    private UserRepository userRepository;
 
     @Autowired
-    public ChatController(ChatMessagesService chatMessagesService) {
+    public ChatController(ChatMessagesService chatMessagesService, UserRepository userRepository) {
         this.chatMessagesService = chatMessagesService;
+        this.userRepository = userRepository;
     }
 
     @GetMapping(value = {"/chat"})
@@ -47,6 +51,10 @@ public class ChatController {
         chatMessage.setSender(user);
         chatMessage.setSendDate(LocalDateTime.now());
         chatMessage.setContent(message.getContent());
+        if (message.getReceiverId() != null){
+            Optional<User> receiver = userRepository.findById(message.getReceiverId());
+            receiver.ifPresent(chatMessage::setReceiver);
+        }
         chatMessage = chatMessagesService.add(chatMessage);
 
         return new ChatMessageModel(chatMessage);
