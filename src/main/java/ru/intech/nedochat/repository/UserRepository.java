@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findByUsername(String login);
+    Optional<User> findByUsernameAndDisabled(String login, boolean disabled);
     boolean existsByUsername(String login);
+    boolean existsByUsernameAndDisabled(String login, boolean disabled);
     List<User> findAllByDisabledOrderByName(boolean disabled);
 }

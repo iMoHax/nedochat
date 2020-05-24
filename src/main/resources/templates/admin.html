@@ -9,11 +9,19 @@
 
 <div layout:fragment="content">
     <section>
-        <div class="container">
-
+        <div>
+            <p>Список пользователей:</p>
+            <ul id="usersArea">
+                <li th:each="usr : ${@usersService.activeUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}">
+                    <input type="text" th:value="${usr.name}" onchange="renameUser(this)"/>
+                    <span class="button btn-warn" onclick="deleteUser(this)">Удалить</span>
+                </li>
+            </ul>
         </div>
     </section>
 </div>
+
+<script layout:fragment="optional" th:src="@{/js/admin.js}"></script>
 
 </body>
 </html>
