@@ -62,16 +62,16 @@ function onMessageReceived(payload) {
             .text(message.sender);
         $messageElement.append($user);
     }
-    var $sendDate = $('<span>').addClass('send-date').text(message.sendDate);
-    $messageElement.append($sendDate);
+    var $sendDate = $('<span>').addClass('send-date').text(moment(message.sendDate).format('HH:mm:ss DD.MM.yyyy'));
+    $messageElement.append(' ').append($sendDate);
 
     if (message.receiver) {
         var $msgReceiver = $('<span>').addClass('receiver').text(message.receiver);
-        $messageElement.append($msgReceiver);
+        $messageElement.append(' ').append($msgReceiver);
     }
     var $messageText = $('<span>').text(message.content);
 
-    $messageElement.append($messageText);
+    $messageElement.append(' ').append($messageText);
 
     $chatArea.append($messageElement);
 }

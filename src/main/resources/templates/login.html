@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>Регистрация нового пользователя</title>
+    <title>Вход</title>
 </head>
 <body>
 
@@ -17,7 +17,7 @@
             <!-- tag::thAction[] -->
             <form method="POST" th:action="@{/login}" id="loginForm">
                 <!-- end::thAction[] -->
-                <label for="username">Имя пользователя: </label>
+                <label for="username">Логин: </label>
                 <input type="text" name="username" id="username" /><br/>
 
                 <label for="password">Пароль: </label>
