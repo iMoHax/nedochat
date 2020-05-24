@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.intech.nedochat.entity.User;
+import ru.intech.nedochat.service.UserExistAuthenticationException;
 import ru.intech.nedochat.service.UsersService;
 import ru.intech.nedochat.model.RegistrationForm;
 
@@ -44,7 +45,13 @@ public class RegistrationController {
             bindingResult.addError(new FieldError("registrationForm", "confirm", "Пароли не совпадают"));
             return "registration";
         }
-        User user = usersService.add(form.toUser(passwordEncoder));
+        User user;
+        try {
+            user = usersService.add(form.toUser(passwordEncoder));
+        } catch (UserExistAuthenticationException e){
+            bindingResult.addError(new FieldError("registrationForm", "username", e.getLocalizedMessage()));
+            return "registration";
+        }
         logger.info("Register new user: {}", user.getUsername());
         return "redirect:/login";
     }

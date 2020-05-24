@@ -5,9 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users", schema = "chat")
@@ -22,7 +20,7 @@ public class User implements UserDetails {
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_roles", schema = "chat")
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
@@ -31,7 +29,6 @@ public class User implements UserDetails {
         this.username = username;
         this.name = name;
         this.password = password;
-        this.roles = Collections.singleton(Role.getDefaultRole());
     }
 
     public Long getId() {
@@ -76,6 +73,11 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void addRole(Role role){
+        this.roles.add(role);
+        role.getUsers().add(this);
+    }
+
     public boolean isDisabled() {
         return disabled;
     }
@@ -108,5 +110,23 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return !disabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(disabled, user.disabled) &&
+                Objects.equals(id, user.id) &&
+                Objects.equals(username, user.username) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(roles, user.roles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

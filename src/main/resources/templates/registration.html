@@ -14,7 +14,7 @@
                 <div>
                     <label for="username">Имя пользователя: </label>
                     <input type="text" th:field="*{username}" th:errorclass="fieldError" />
-                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{datePlanted}"></p>
+                    <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
                 </div>
                 <div>
                     <label for="name">Псевдоним: </label>

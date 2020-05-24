@@ -5,6 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "messages", schema = "chat")
@@ -70,5 +71,22 @@ public class ChatMessage implements Comparable<ChatMessage> {
             return sendDate != null ? 1 : -1;
         }
         return sendDate.compareTo(other.sendDate);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChatMessage)) return false;
+        ChatMessage that = (ChatMessage) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(content, that.content) &&
+                Objects.equals(sender, that.sender) &&
+                Objects.equals(type, that.type) &&
+                Objects.equals(sendDate, that.sendDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
