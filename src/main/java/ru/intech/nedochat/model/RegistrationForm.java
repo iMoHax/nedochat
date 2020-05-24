@@ -1,4 +1,4 @@
-package ru.intech.nedochat.view;
+package ru.intech.nedochat.model;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.intech.nedochat.entity.User;

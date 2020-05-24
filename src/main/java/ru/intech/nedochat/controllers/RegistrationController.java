@@ -1,5 +1,7 @@
 package ru.intech.nedochat.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,14 +10,16 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.intech.nedochat.entity.User;
 import ru.intech.nedochat.service.UsersService;
-import ru.intech.nedochat.view.RegistrationForm;
+import ru.intech.nedochat.model.RegistrationForm;
 
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/registration")
 public class RegistrationController {
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
 
     private UsersService usersService;
     private PasswordEncoder passwordEncoder;
@@ -40,7 +44,8 @@ public class RegistrationController {
             bindingResult.addError(new FieldError("registrationForm", "confirm", "Пароли не совпадают"));
             return "registration";
         }
-        usersService.add(form.toUser(passwordEncoder));
+        User user = usersService.add(form.toUser(passwordEncoder));
+        logger.info("Register new user: {}", user.getUsername());
         return "redirect:/login";
     }
 }

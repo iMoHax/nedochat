@@ -5,11 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import ru.intech.nedochat.entity.Role;
 import ru.intech.nedochat.entity.User;
 import ru.intech.nedochat.repository.UserRepository;
 
-import java.util.Collections;
 
 @Service
 public class UsersService implements UserDetailsService {
@@ -22,12 +20,12 @@ public class UsersService implements UserDetailsService {
     }
 
 
-    public void add(User user){
+    public User add(User user){
         String login = user.getUsername();
         if (userRepository.existsByUsername(login)){
             throw new UserExistAuthenticationException("Имя пользователя "+login+" уже занято" );
         }
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
 
