@@ -13,8 +13,9 @@
             <p>Список пользователей:</p>
             <ul id="usersArea">
                 <li th:each="usr : ${@usersService.activeUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}">
-                    <input type="text" th:value="${usr.name}" onchange="renameUser(this)"/>
-                    <span class="button btn-warn" onclick="deleteUser(this)">Удалить</span>
+                    <span class="user-name" th:text="${usr.name}"></span>
+                    <button class="button btn-warn" onclick="renameUser(this)">Переименовать</button>
+                    <button class="button btn-warn" onclick="deleteUser(this)">Удалить</button>
                 </li>
             </ul>
         </div>

@@ -12,8 +12,24 @@ function deleteUser(obj){
 }
 
 function renameUser(obj){
-    var userId = $(obj).parent('li').data('id'),
-        newName = $(obj).val();
+    var $obj = $(obj),
+        $userData = $obj.parents('li'),
+        usrId = $userData.data('id'),
+        $name = $userData.find('.user-name');
+    var $tb = $name.find('input');
+    if ($tb.length) {
+        $name.text($tb.val());
+        sendRenameUserRequest(usrId, $tb.val());
+        $obj.text('Переименовать');
+    } else {
+        $tb = $('<input>').prop('type','text').val($name.text());
+        $name.empty().append($tb);
+        $tb.focus();
+        $obj.text('Сохранить');
+    }
+}
+
+function sendRenameUserRequest(userId,newName){
     $.ajax({
         method: "PATCH",
         contentType: "application/json",
