@@ -10,9 +10,9 @@ public class IndexController {
 
     @GetMapping(value = {"/", "/index"})
     public String index(Principal principal) {
-        if (principal == null) return "index";
+        if (principal == null) return "redirect:/login";
         else {
-            return "chat";
+            return "redirect:/chat";
         }
     }
 }

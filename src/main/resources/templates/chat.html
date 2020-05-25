@@ -7,44 +7,57 @@
 </head>
 <body>
 
-<div layout:fragment="content">
-    <section>
-        <div>
-            <p>Список пользователей:</p>
-            <ul id="usersArea">
-                <li th:each="usr : ${@usersService.onlineUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}" th:text="${usr.name}" onclick="setReceiver(this)">
-                </li>
-            </ul>
-        </div>
-        <div>
-            <p>Сообщения:</p>
-            <ul id="chatArea" th:data-admin="${user.admin ? 'true' : ''}">
-                <li th:each="msg : ${chatMessages}" th:id="|msg-${msg.id}|" th:data-id="${msg.id}" class="chat-message">
-                    <div>
-                        <strong class="nickname" th:text="${msg.sender.name}"></strong>
-                        <span class="receiver" th:if="${msg.receiver}" th:text="${msg.receiver.name}"></span>
-                        <th:block th:if="${user.admin}">
-                        <button onclick="editMessage(this)">Изменить</button>
-                        <button onclick="deleteMessage(this)">Удалить</button>
-                        </th:block>
-                        <span class="send-date" th:text="${#temporals.format(msg.sendDate,'HH:mm:ss dd.MM.yyyy')}"></span>
-                    </div>
-                    <div class="content" th:text="${msg.content}"></div>
-                </li>
-            </ul>
-        </div>
-        <div>
-            <form method="POST" th:action="@{/chat/postMessage}" id="chatForm">
-                <p id="receiver" onclick="clearReceiver()"></p>
-                <div>
-                    <label for="msg">Сообщение: </label>
-                    <textarea name="msg" id="msg" rows="6"></textarea>
+<div layout:fragment="content" class="container">
+    <div class="chat_container">
+        <div class="row">
+            <div class="col-sm-3 chat_sidebar">
+                <div class="member_list">
+                    <ul id="usersArea" class="list-unstyled">
+                        <li class="left clearfix" th:each="usr : ${@usersService.onlineUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}" onclick="setReceiver(this)">
+                            <div class="chat-body clearfix">
+                                <div class="header_sec">
+                                    <strong class="primary-font nickname" th:text="${usr.name}">Jack Sparrow</strong>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <input type="submit" value="Отправить"/>
-            </form>
-
+            </div>
+            <div class="col-sm-9 message_section">
+                <div class="chat_area">
+                    <ul class="list-unstyled" id="chatArea" th:data-admin="${user.admin ? 'true' : ''}">
+                        <li class="chat-message left clearfix" th:each="msg : ${chatMessages}" th:id="|msg-${msg.id}|" th:data-id="${msg.id}">
+                            <div>
+                                <strong class="nickname" th:text="${msg.sender.name}"></strong>
+                                <strong class="receiver" th:if="${msg.receiver}" th:text="|-> ${msg.receiver.name}|"></strong>
+                                <div class="float-right" th:if="${user.admin}">
+                                    <button class="btn btn-secondary" onclick="editMessage(this)">Изменить</button>
+                                    <button class="btn btn-secondary" onclick="deleteMessage(this)">Удалить</button>
+                                </div>
+                            </div>
+                            <div class="chat-body1 clearfix">
+                                <p class="content" th:text="${msg.content}"></p>
+                                <div class="chat_time float-right" th:text="${#temporals.format(msg.sendDate,'HH:mm:ss dd.MM.yyyy')}"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="message_write">
+                    <form method="POST" th:action="@{/chat/postMessage}" id="chatForm">
+                        <p class="btn btn-primary" id="receiver" onclick="clearReceiver()">Всем</p>
+                        <div>
+                            <label for="msg">Сообщение: </label>
+                            <textarea name="msg" id="msg" class="form-control" placeholder="Текст сообщения..."></textarea>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="chat_bottom">
+                            <input class="float-right btn btn-success" type="submit" value="Отправить"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </section>
+    </div>
 </div>
 
 <script layout:fragment="optional" th:src="@{/js/chat.js}"></script>

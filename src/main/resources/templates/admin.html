@@ -7,19 +7,19 @@
 </head>
 <body>
 
-<div layout:fragment="content">
-    <section>
+<div layout:fragment="content" class="container">
         <div>
-            <p>Список пользователей:</p>
-            <ul id="usersArea">
-                <li th:each="usr : ${@usersService.activeUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}">
-                    <span class="user-name" th:text="${usr.name}"></span>
-                    <button class="button btn-warn" onclick="renameUser(this)">Переименовать</button>
-                    <button class="button btn-warn" onclick="deleteUser(this)">Удалить</button>
+            <h4>Пользователи:</h4>
+            <ul class="list-unstyled col-sm-5" id="usersArea">
+                <li class="left clearfix" th:each="usr : ${@usersService.activeUsers}" th:id="|user-${usr.id}|" th:data-id="${usr.id}">
+                    <strong class="user-name" th:text="${usr.name}"></strong>
+                    <div class="float-right">
+                        <button class="btn btn-secondary" onclick="renameUser(this)">Переименовать</button>
+                        <button class="btn btn-secondary" onclick="deleteUser(this)">Удалить</button>
+                    </div>
                 </li>
             </ul>
         </div>
-    </section>
 </div>
 
 <script layout:fragment="optional" th:src="@{/js/admin.js}"></script>

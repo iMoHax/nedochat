@@ -46,15 +46,13 @@ function sendMessage(event) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-    var $messageElement = $('<li>'),
+    var $messageElement = $('<li class="chat-message left clearfix">'),
         $header = $('<div>');
 
     if(message.type === 'JOIN') {
-        $messageElement.addClass('event-message');
         message.content = message.sender + ' присоединился!';
         onJoinUser(message.senderId,message.sender);
     } else if (message.type === 'LEAVE') {
-        $messageElement.addClass('event-message');
         message.content = message.sender + ' покинул чат!';
         onLeaveUser(message.senderId);
     } else {
@@ -67,38 +65,45 @@ function onMessageReceived(payload) {
         $header.append($user);
 
         if (message.receiver) {
-            var $msgReceiver = $('<span>').addClass('receiver').text(message.receiver);
+            var $msgReceiver = $('<strong>').addClass('receiver').text('-> '+message.receiver);
             $header.append(' ').append($msgReceiver);
         }
 
         if ($chatArea.data('admin')){
-            var $buttons = $('<button onclick="editMessage(this)">Изменить</button> '+
-                '<button onclick="deleteMessage(this)">Удалить</button>');
+            var $buttons = $('<div class="float-right"><button class="btn btn-secondary" onclick="editMessage(this)">Изменить</button> '+
+                                                      '<button class="btn btn-secondary" onclick="deleteMessage(this)">Удалить</button></div');
             $header.append(' ').append($buttons);
         }
     }
-
-    var $sendDate = $('<span>').addClass('send-date').text(moment(message.sendDate).format('HH:mm:ss DD.MM.yyyy'));
-    $header.append(' ').append($sendDate);
-
     $messageElement.append($header);
 
+    var $chatBody = $('<div class="chat-body1 clearfix">');
 
-    var $messageText = $('<div>').addClass('content').text(message.content);
-    $messageElement.append($messageText);
+    var $messageText = $('<p class="content">').text(message.content);
+    if (message.type != 'CHAT'){
+        $messageText.addClass('alert');
+    }
+    $chatBody.append($messageText);
+    var $sendDate = $('<div class="chat_time float-right">').text(moment(message.sendDate).format('HH:mm:ss DD.MM.yyyy'));
+    $chatBody.append($sendDate);
 
+    $messageElement.append($chatBody);
     $chatArea.append($messageElement);
 }
 
 function onJoinUser(userId, name){
-    var $userLabel = $('<li>')
+    var $userLabel = $('<li class="left clearfix">')
         .attr("id",'user-'+userId)
         .data("id",userId)
-        .text(name)
         .on('click',function(){setReceiver(this)});
+    var $nickname = $('<div class="chat-body clearfix">'+
+                        '<div class="header_sec">'+
+                        '<strong class="primary-font nickname">'+name+'</strong>'+
+                      '</div></div>');
+    $userLabel.append($nickname);
     $usersArea.append($userLabel);
     $usersArea.find('li')
-        .sort(function(u1,u2){return $(u1).text() > $(u2).text() ? 1 : -1})
+        .sort(function(u1,u2){return $(u1).find('.nickname').text() > $(u2).find('.nickname').text() ? 1 : -1})
         .appendTo($usersArea);
 }
 
@@ -109,7 +114,7 @@ function onLeaveUser(userId){
 function setReceiver(obj){
     var $obj=$(obj),
         receiverId = $obj.data('id'),
-        receiver = $obj.text();
+        receiver = $obj.find('.nickname').text();
     $receiver
         .data('id',receiverId)
         .text(receiver);
@@ -117,7 +122,7 @@ function setReceiver(obj){
 }
 
 function clearReceiver(){
-    $receiver.removeAttr('data-id').text('');
+    $receiver.removeAttr('data-id').text('Всем');
 }
 
 function sendUpdateMessage(messageId, newContent) {
