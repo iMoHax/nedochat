@@ -9,9 +9,9 @@ public class ChatMessageModel {
     private Long id;
     private ChatMessageType type;
     private String content;
-    private Long senderId;
+    private Integer senderId;
     private String sender;
-    private Long receiverId;
+    private Integer receiverId;
     private String receiver;
     private LocalDateTime sendDate;
 
@@ -56,11 +56,11 @@ public class ChatMessageModel {
         this.content = content;
     }
 
-    public Long getSenderId() {
+    public Integer getSenderId() {
         return senderId;
     }
 
-    public void setSenderId(Long senderId) {
+    public void setSenderId(Integer senderId) {
         this.senderId = senderId;
     }
 
@@ -72,11 +72,11 @@ public class ChatMessageModel {
         this.sender = sender;
     }
 
-    public Long getReceiverId() {
+    public Integer getReceiverId() {
         return receiverId;
     }
 
-    public void setReceiverId(Long receiverId) {
+    public void setReceiverId(Integer receiverId) {
         this.receiverId = receiverId;
     }
 

@@ -29,7 +29,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     @RolesAllowed(Role.ADMIN)
-    public void deleteUser(@PathVariable("userId") Long userId) {
+    public void deleteUser(@PathVariable("userId") Integer userId) {
         Optional<User> user = userRepository.findById(userId);
         user.ifPresent((u) -> {
             u.setDisabled(true);
@@ -39,7 +39,7 @@ public class UserController {
 
     @PatchMapping(path = "/{userId}", consumes="application/json")
     @RolesAllowed(Role.ADMIN)
-    public ResponseEntity patchUser(@PathVariable("userId") Long userId, @RequestBody User patch) {
+    public ResponseEntity patchUser(@PathVariable("userId") Integer userId, @RequestBody User patch) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()){
             User u = user.get();

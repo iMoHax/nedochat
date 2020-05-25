@@ -6,6 +6,6 @@ import ru.intech.nedochat.entity.Role;
 
 import java.util.Optional;
 
-public interface RoleRepository extends CrudRepository<Role, Long> {
+public interface RoleRepository extends CrudRepository<Role, Integer> {
     Optional<Role> findByName(String login);
 }

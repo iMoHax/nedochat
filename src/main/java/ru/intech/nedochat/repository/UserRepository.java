@@ -6,7 +6,7 @@ import ru.intech.nedochat.entity.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findByUsername(String login);
     Optional<User> findByUsernameAndDisabled(String login, boolean disabled);
