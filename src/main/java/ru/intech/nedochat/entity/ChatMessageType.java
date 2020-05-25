@@ -1,5 +1,5 @@
 package ru.intech.nedochat.entity;
 
 public enum ChatMessageType {
-    CHAT, JOIN, LEAVE
+    CHAT, JOIN, LEAVE, UPDATE, DELETE
 }

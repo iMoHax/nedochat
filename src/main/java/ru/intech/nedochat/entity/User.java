@@ -81,6 +81,10 @@ public class User implements UserDetails {
         return disabled;
     }
 
+    public boolean isAdmin(){
+        return roles.stream().anyMatch(r -> Role.ADMIN.equals(r.getName()));
+    }
+
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
     }

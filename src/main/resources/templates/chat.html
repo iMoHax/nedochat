@@ -18,12 +18,18 @@
         </div>
         <div>
             <p>Сообщения:</p>
-            <ul id="chatArea">
-                <li th:each="msg : ${chatMessages}" th:attr="id=${msg.id}" class="chat-message">
-                    <strong class="nickname" th:text="${msg.sender.name}"></strong>
-                    <span class="send-date" th:text="${#temporals.format(msg.sendDate,'HH:mm:ss dd.MM.yyyy')}"></span>
-                    <span class="receiver" th:if="${msg.receiver}" th:text="${msg.receiver.name}"></span>
-                    <span th:text="${msg.content}"></span>
+            <ul id="chatArea" th:data-admin="${user.admin ? 'true' : ''}">
+                <li th:each="msg : ${chatMessages}" th:id="|msg-${msg.id}|" th:data-id="${msg.id}" class="chat-message">
+                    <div>
+                        <strong class="nickname" th:text="${msg.sender.name}"></strong>
+                        <span class="receiver" th:if="${msg.receiver}" th:text="${msg.receiver.name}"></span>
+                        <th:block th:if="${user.admin}">
+                        <button onclick="editMessage(this)">Изменить</button>
+                        <button onclick="deleteMessage(this)">Удалить</button>
+                        </th:block>
+                        <span class="send-date" th:text="${#temporals.format(msg.sendDate,'HH:mm:ss dd.MM.yyyy')}"></span>
+                    </div>
+                    <div class="content" th:text="${msg.content}"></div>
                 </li>
             </ul>
         </div>

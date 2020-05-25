@@ -9,6 +9,7 @@ import ru.intech.nedochat.repository.ChatMessageRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -35,6 +36,10 @@ public class ChatMessagesService {
 
     public void delete(ChatMessage message){
         chatMessageRepository.delete(message);
+    }
+
+    public Optional<ChatMessage> get(Long id){
+        return chatMessageRepository.findById(id);
     }
 
     public List<ChatMessage> getMessageHistory(){

@@ -15,6 +15,7 @@ function connect() {
 
 function onConnected() {
     stompClient.subscribe('/topic/publicChatRoom', onMessageReceived);
+    stompClient.subscribe('/topic/updateMessages', onUpdateMessageReceived);
 }
 
 function onError(error) {
@@ -45,7 +46,8 @@ function sendMessage(event) {
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
 
-    var $messageElement = $('<li>');
+    var $messageElement = $('<li>'),
+        $header = $('<div>');
 
     if(message.type === 'JOIN') {
         $messageElement.addClass('event-message');
@@ -56,22 +58,34 @@ function onMessageReceived(payload) {
         message.content = message.sender + ' покинул чат!';
         onLeaveUser(message.senderId);
     } else {
-        $messageElement.addClass('chat-message').attr('id',message.id);
+        $messageElement.addClass('chat-message')
+            .attr('id','msg-'+message.id)
+            .data('id',message.id);
         var $user = $('<strong>')
             .addClass('nickname')
             .text(message.sender);
-        $messageElement.append($user);
+        $header.append($user);
+
+        if (message.receiver) {
+            var $msgReceiver = $('<span>').addClass('receiver').text(message.receiver);
+            $header.append(' ').append($msgReceiver);
+        }
+
+        if ($chatArea.data('admin')){
+            var $buttons = $('<button onclick="editMessage(this)">Изменить</button> '+
+                '<button onclick="deleteMessage(this)">Удалить</button>');
+            $header.append(' ').append($buttons);
+        }
     }
+
     var $sendDate = $('<span>').addClass('send-date').text(moment(message.sendDate).format('HH:mm:ss DD.MM.yyyy'));
-    $messageElement.append(' ').append($sendDate);
+    $header.append(' ').append($sendDate);
 
-    if (message.receiver) {
-        var $msgReceiver = $('<span>').addClass('receiver').text(message.receiver);
-        $messageElement.append(' ').append($msgReceiver);
-    }
-    var $messageText = $('<span>').text(message.content);
+    $messageElement.append($header);
 
-    $messageElement.append(' ').append($messageText);
+
+    var $messageText = $('<div>').addClass('content').text(message.content);
+    $messageElement.append($messageText);
 
     $chatArea.append($messageElement);
 }
@@ -105,6 +119,52 @@ function setReceiver(obj){
 function clearReceiver(){
     $receiver.removeAttr('data-id').text('');
 }
+
+function sendUpdateMessage(messageId, newContent) {
+    if(stompClient) {
+        var chatMessage = {
+            id: messageId,
+            content: newContent,
+            type: newContent ? 'UPDATE' : 'DELETE'
+        };
+        stompClient.send("/app/chat.updateMessage", {}, JSON.stringify(chatMessage));
+    }
+}
+
+function onUpdateMessageReceived(payload) {
+    var message = JSON.parse(payload.body),
+        $msg = $("#msg-"+message.id);
+    if (message.type === 'DELETE'){
+        $msg.remove();
+    } else if (message.type === 'UPDATE'){
+        $msg.find('.content').text(message.content);
+    }
+}
+
+function editMessage(obj){
+    var $obj = $(obj),
+        $chatMessage = $obj.parents('li'),
+        messId = $chatMessage.data('id'),
+        $mess = $chatMessage.find('.content');
+    var $ta = $mess.find('textarea');
+    if ($ta.length) {
+        $mess.text($ta.val());
+        sendUpdateMessage(messId, $ta.val());
+        $obj.text('Изменить');
+    } else {
+        $ta = $('<textarea>').val($mess.text());
+        $mess.empty().append($ta);
+        $ta.focus();
+        $obj.text('Сохранить');
+    }
+}
+
+
+function deleteMessage(obj){
+    var messId = $(obj).parents('li').data('id');
+    sendUpdateMessage(messId);
+}
+
 
 $(function () {
     $chatForm.on('submit', sendMessage);

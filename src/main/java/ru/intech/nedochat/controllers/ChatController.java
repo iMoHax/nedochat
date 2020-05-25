@@ -10,11 +10,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.intech.nedochat.entity.ChatMessage;
 import ru.intech.nedochat.entity.ChatMessageType;
+import ru.intech.nedochat.entity.Role;
 import ru.intech.nedochat.entity.User;
 import ru.intech.nedochat.model.ChatMessageModel;
 import ru.intech.nedochat.repository.UserRepository;
 import ru.intech.nedochat.service.ChatMessagesService;
 
+import javax.annotation.security.RolesAllowed;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,10 +37,12 @@ public class ChatController {
     }
 
     @GetMapping(value = {"/chat"})
-    public String login(Model model) {
+    public String login(Model model, Principal principal) {
         List<ChatMessage> chatMessages = new ArrayList<>(chatMessagesService.getMessageHistory());
         chatMessages.sort(Comparator.<ChatMessage>naturalOrder());
         model.addAttribute("chatMessages", chatMessages);
+        User user = (User) ((UsernamePasswordAuthenticationToken)principal).getPrincipal();
+        model.addAttribute("user", user);
         return "chat";
     }
 
@@ -58,6 +62,28 @@ public class ChatController {
         chatMessage = chatMessagesService.add(chatMessage);
 
         return new ChatMessageModel(chatMessage);
+    }
+
+    @MessageMapping("/chat.updateMessage")
+    @SendTo("/topic/updateMessages")
+    @RolesAllowed(Role.ADMIN)
+    public ChatMessageModel updateMessage(@Payload ChatMessageModel message) {
+        Optional<ChatMessage> chatMessage = chatMessagesService.get(message.getId());
+        if (chatMessage.isPresent()){
+            ChatMessage cm = chatMessage.get();
+            switch (message.getType()){
+                case UPDATE:
+                        cm.setContent(message.getContent());
+                        chatMessagesService.update(cm);
+                    break;
+                case DELETE:
+                        chatMessagesService.delete(cm);
+                    break;
+            }
+            return message;
+        } else {
+            return new ChatMessageModel();
+        }
     }
 
 }
